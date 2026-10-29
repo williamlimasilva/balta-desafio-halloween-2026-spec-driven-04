@@ -1,4 +1,5 @@
 @baseUrl = http://localhost:5080
+@customCode = balta-io-20261029
 
 ### Criar uma URL curta (código gerado automaticamente)
 POST {{baseUrl}}/urls
@@ -8,12 +9,75 @@ Content-Type: application/json
   "url": "https://balta.io"
 }
 
+### Criar URL curta com código customizado (201)
+POST {{baseUrl}}/urls
+Content-Type: application/json
+
+{
+  "url": "https://balta.io",
+  "code": "{{customCode}}"
+}
+
+### Detalhes do código customizado antes do clique
+GET {{baseUrl}}/urls/{{customCode}}
+
+### Navegar pelo código customizado (302)
+GET {{baseUrl}}/{{customCode}}
+
+### Confirmar incremento do clique
+GET {{baseUrl}}/urls/{{customCode}}
+
 ### URL inválida (deve retornar 400)
 POST {{baseUrl}}/urls
 Content-Type: application/json
 
 {
   "url": "isso-nao-e-uma-url"
+}
+
+### Código curto demais (400)
+POST {{baseUrl}}/urls
+Content-Type: application/json
+
+{
+  "url": "https://balta.io",
+  "code": "ab"
+}
+
+### Código longo demais (400)
+POST {{baseUrl}}/urls
+Content-Type: application/json
+
+{
+  "url": "https://balta.io",
+  "code": "abcdefghijklmnopqrstuvwxyz1234567"
+}
+
+### Código com caractere não permitido (400)
+POST {{baseUrl}}/urls
+Content-Type: application/json
+
+{
+  "url": "https://balta.io",
+  "code": "bad code"
+}
+
+### Código reservado sem distinção de caixa (400)
+POST {{baseUrl}}/urls
+Content-Type: application/json
+
+{
+  "url": "https://balta.io",
+  "code": "URLs"
+}
+
+### Código já utilizado (409)
+POST {{baseUrl}}/urls
+Content-Type: application/json
+
+{
+  "url": "https://example.com",
+  "code": "{{customCode}}"
 }
 
 ### Listar todas as URLs

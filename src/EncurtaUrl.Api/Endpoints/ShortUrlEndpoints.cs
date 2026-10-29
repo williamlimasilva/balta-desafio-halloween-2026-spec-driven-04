@@ -3,6 +3,7 @@ using EncurtaUrl.Api.Data;
 using EncurtaUrl.Api.Models;
 using EncurtaUrl.Api.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace EncurtaUrl.Api.Endpoints;
@@ -10,12 +11,15 @@ namespace EncurtaUrl.Api.Endpoints;
 public static class ShortUrlEndpoints
 {
     private const int MaxGenerationAttempts = 5;
+    private const int SqliteConstraintUniqueErrorCode = 2067;
 
     public static IEndpointRouteBuilder MapShortUrlEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/urls").WithTags("URLs");
 
-        group.MapPost("/", CreateAsync).WithName("CreateShortUrl");
+        group.MapPost("/", CreateAsync)
+            .WithName("CreateShortUrl")
+            .ProducesProblem(StatusCodes.Status409Conflict);
         group.MapGet("/", ListAsync).WithName("ListShortUrls");
         group.MapGet("/{code}", GetByCodeAsync).WithName("GetShortUrl");
 
@@ -42,23 +46,53 @@ public static class ShortUrlEndpoints
             });
         }
 
-        string? code = null;
+        string? code;
+        var isCustomCode = !string.IsNullOrWhiteSpace(request.Code);
 
-        for (var attempt = 0; attempt < MaxGenerationAttempts; attempt++)
+        if (isCustomCode)
         {
-            var candidate = generator.Generate();
-            if (!await db.ShortUrls.AnyAsync(x => x.Code == candidate, ct))
+            var customCode = request.Code!;
+            var validationResult = ShortCodeValidator.Validate(customCode);
+            if (validationResult != ShortCodeValidationResult.Valid)
             {
-                code = candidate;
-                break;
+                var message = validationResult == ShortCodeValidationResult.Reserved
+                    ? "O código informado é reservado."
+                    : "O código deve ter entre 3 e 32 caracteres e conter apenas letras sem acento, números, hífen ou underscore.";
+
+                return TypedResults.ValidationProblem(new Dictionary<string, string[]>
+                {
+                    ["code"] = [message]
+                });
+            }
+
+            code = customCode;
+            if (await db.ShortUrls.AnyAsync(x => x.Code == customCode, ct))
+            {
+                return TypedResults.Problem(
+                    title: "O código informado já está em uso.",
+                    statusCode: StatusCodes.Status409Conflict);
             }
         }
-
-        if (code is null)
+        else
         {
-            return TypedResults.Problem(
-                title: "Não foi possível gerar um código único.",
-                statusCode: StatusCodes.Status500InternalServerError);
+            code = null;
+
+            for (var attempt = 0; attempt < MaxGenerationAttempts; attempt++)
+            {
+                var candidate = generator.Generate();
+                if (!await db.ShortUrls.AnyAsync(x => x.Code == candidate, ct))
+                {
+                    code = candidate;
+                    break;
+                }
+            }
+
+            if (code is null)
+            {
+                return TypedResults.Problem(
+                    title: "Não foi possível gerar um código único.",
+                    statusCode: StatusCodes.Status500InternalServerError);
+            }
         }
 
         var shortUrl = new ShortUrl
@@ -68,7 +102,22 @@ public static class ShortUrlEndpoints
         };
 
         db.ShortUrls.Add(shortUrl);
-        await db.SaveChangesAsync(ct);
+        try
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException exception) when (
+            isCustomCode
+            && exception.InnerException is SqliteException sqliteException
+            && sqliteException.SqliteExtendedErrorCode == SqliteConstraintUniqueErrorCode)
+        {
+            if (!await db.ShortUrls.AsNoTracking().AnyAsync(x => x.Code == shortUrl.Code, ct))
+                throw;
+
+            return TypedResults.Problem(
+                title: "O código informado já está em uso.",
+                statusCode: StatusCodes.Status409Conflict);
+        }
 
         var response = ToResponse(shortUrl, http);
         return TypedResults.Created($"/urls/{shortUrl.Code}", response);
