@@ -9,17 +9,18 @@ cd src/EncurtaUrl.Api
 dotnet run
 ```
 
-A API sobe em `http://localhost:5080` e o banco `encurtaurl.db` é criado na primeira execução.
+A API sobe em `http://localhost:5080` e o banco local `data/encurtaurl.db` é criado na primeira execução, fora de `src/`.
 
 ## Endpoints
 
-| Método | Rota | Descrição |
-| --- | --- | --- |
-| POST | `/urls` | Cria uma URL curta com código gerado automaticamente |
-| GET | `/urls` | Lista todas as URLs curtas |
-| GET | `/urls/{code}` | Detalhes de uma URL curta |
-| GET | `/{code}` | Redireciona (302) para a URL original e conta o clique |
-| GET | `/openapi/v1.json` | Documento OpenAPI (apenas em Development) |
+| Método | Rota               | Descrição                                                              |
+| ------ | ------------------ | ---------------------------------------------------------------------- |
+| POST   | `/urls`            | Cria uma URL curta com código gerado ou com o campo opcional `code`    |
+| GET    | `/urls`            | Lista todas as URLs curtas                                             |
+| GET    | `/urls/{code}`     | Detalhes de uma URL curta                                              |
+| GET    | `/{code}`          | Redireciona (302) para a URL original e conta o clique                 |
+| GET    | `/openapi/v1.json` | Documento OpenAPI (apenas em Development)                              |
+| GET    | `/swagger`         | Interface Swagger para explorar e testar a API (apenas em Development) |
 
 Use o arquivo `src/EncurtaUrl.Api/EncurtaUrl.Api.http` para testar.
 
@@ -32,5 +33,6 @@ src/EncurtaUrl.Api
 ├── Endpoints/ShortUrlEndpoints.cs   # Minimal APIs
 ├── Models/ShortUrl.cs               # entidade
 ├── Services/ShortCodeGenerator.cs   # código aleatório base62 de 7 caracteres
+├── Services/ShortCodeValidator.cs   # regras de formato e códigos reservados
 └── Program.cs
 ```
