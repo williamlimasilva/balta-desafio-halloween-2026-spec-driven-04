@@ -1,7 +1,12 @@
-bin/
-obj/
-.vs/
+/.vs/
 *.user
-*.db
-*.db-shm
-*.db-wal
+
+# .NET SDK build outputs for the API project.
+/src/EncurtaUrl.Api/bin/
+/src/EncurtaUrl.Api/obj/
+
+# Local SQLite database and sidecar files created by the API.
+/src/EncurtaUrl.Api/encurtaurl.db
+/src/EncurtaUrl.Api/encurtaurl.db-journal
+/src/EncurtaUrl.Api/encurtaurl.db-wal
+/src/EncurtaUrl.Api/encurtaurl.db-shm
