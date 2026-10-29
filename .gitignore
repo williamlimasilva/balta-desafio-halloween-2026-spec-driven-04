@@ -5,8 +5,18 @@
 /src/EncurtaUrl.Api/bin/
 /src/EncurtaUrl.Api/obj/
 
+# Centralized .NET SDK outputs for all projects.
+/artifacts/
+
 # Local SQLite database and sidecar files created by the API.
+# Legacy location retained so an old local database is never committed.
 /src/EncurtaUrl.Api/encurtaurl.db
 /src/EncurtaUrl.Api/encurtaurl.db-journal
 /src/EncurtaUrl.Api/encurtaurl.db-wal
 /src/EncurtaUrl.Api/encurtaurl.db-shm
+
+# Current local SQLite database and sidecar files, stored outside src/.
+/data/encurtaurl.db
+/data/encurtaurl.db-journal
+/data/encurtaurl.db-wal
+/data/encurtaurl.db-shm
