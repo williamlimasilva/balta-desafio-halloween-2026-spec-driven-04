@@ -1,9 +1,0 @@
-/speckit-plan Use a stack e a arquitetura que já existem no projeto, conforme a constituição: .NET 10, Minimal APIs, EF Core com SQLite, TypedResults e ProblemDetails.
-
-Diretrizes:
-- Estender o record CreateShortUrlRequest com um campo opcional Code. Não criar endpoint novo.
-- Concentrar as regras do código customizado (formato, tamanho, reservados) em uma classe pequena em Services/, sem pacote de validação externo.
-- Não alterar o schema: a coluna Code já existe com tamanho 32 e índice único.
-- Tratar a corrida entre duas requisições com o mesmo código capturando a violação do índice único no SaveChanges e devolvendo 409.
-- Atualizar o EncurtaUrl.Api.http com os cenários novos.
-- Não adicionar pacotes NuGet nem projeto de testes.
