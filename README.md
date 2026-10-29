@@ -31,8 +31,8 @@ API de encurtamento de URLs criada para o **Desafio 4 do Halloween 2026**, da [b
 Abra um terminal PowerShell na raiz deste repositório e execute:
 
 ```powershell
-dotnet restore src/EncurtaUrl.Api/EncurtaUrl.Api.csproj
-dotnet build src/EncurtaUrl.Api/EncurtaUrl.Api.csproj
+dotnet restore EncurtaUrl.sln
+dotnet build EncurtaUrl.sln
 dotnet run --project src/EncurtaUrl.Api/EncurtaUrl.Api.csproj --launch-profile http
 ```
 
@@ -107,7 +107,7 @@ No VS Code com a extensão REST Client instalada, abra o arquivo e selecione **S
 O projeto não possui um projeto de testes automatizados. Os cenários HTTP do arquivo `.http` e o build são os gates de validação definidos para esta aplicação:
 
 ```powershell
-dotnet build src/EncurtaUrl.Api/EncurtaUrl.Api.csproj
+dotnet build EncurtaUrl.sln
 ```
 
 ## Estrutura
@@ -115,6 +115,7 @@ dotnet build src/EncurtaUrl.Api/EncurtaUrl.Api.csproj
 ```text
 .
 ├── Directory.Build.props               # Saídas centralizadas do SDK .NET
+├── EncurtaUrl.sln                       # Solution para agrupar os projetos .NET do repositório
 ├── artifacts/                           # bin, obj e demais saídas geradas; ignorado pelo Git
 ├── data/                                # Banco SQLite local e sidecars; ignorados pelo Git
 ├── docs/prompts.md                      # Registro do fluxo SpecKit usado no desafio
