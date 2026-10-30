@@ -13,14 +13,14 @@ A API sobe em `http://localhost:5080` e o banco local `data/encurtaurl.db` é cr
 
 ## Endpoints
 
-| Método | Rota               | Descrição                                                              |
-| ------ | ------------------ | ---------------------------------------------------------------------- |
-| POST   | `/urls`            | Cria uma URL curta com código gerado ou com o campo opcional `code`    |
-| GET    | `/urls`            | Lista todas as URLs curtas                                             |
-| GET    | `/urls/{code}`     | Detalhes de uma URL curta                                              |
-| GET    | `/{code}`          | Redireciona (302) para a URL original e conta o clique                 |
-| GET    | `/openapi/v1.json` | Documento OpenAPI (apenas em Development)                              |
-| GET    | `/swagger`         | Interface Swagger para explorar e testar a API (apenas em Development) |
+| Método | Rota               | Descrição                                                             |
+| ------ | ------------------ | --------------------------------------------------------------------- |
+| POST   | `/urls`            | Cria uma URL curta com código gerado ou com o campo opcional `code`   |
+| GET    | `/urls`            | Lista todas as URLs curtas                                            |
+| GET    | `/urls/{code}`     | Detalhes de uma URL curta                                             |
+| GET    | `/{code}`          | Redireciona (302) para a URL original e conta o clique                |
+| GET    | `/openapi/v1.json` | Documento OpenAPI (apenas em Development)                             |
+| GET    | `/scalar`          | Interface Scalar para explorar e testar a API (apenas em Development) |
 
 Use o arquivo `src/EncurtaUrl.Api/EncurtaUrl.Api.http` para testar.
 

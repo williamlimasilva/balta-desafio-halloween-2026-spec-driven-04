@@ -12,13 +12,13 @@ API de encurtamento de URLs criada para o **Desafio 4 do Halloween 2026**, da [b
 - Reserva `urls` sem distinção entre maiúsculas e minúsculas para evitar conflito com as rotas da API.
 - Rejeita códigos já utilizados com HTTP 409, incluindo colisões concorrentes protegidas pelo índice único do SQLite.
 - Lista links, consulta detalhes e redireciona para a URL original, contando cada clique bem-sucedido.
-- Disponibiliza OpenAPI e Swagger UI apenas no ambiente Development.
+- Disponibiliza OpenAPI e Scalar apenas no ambiente Development.
 
 ## Tecnologias
 
 - .NET 10 e ASP.NET Core Minimal APIs.
 - Entity Framework Core com SQLite.
-- OpenAPI integrado ao ASP.NET Core e Swagger UI via NSwag.
+- OpenAPI integrado ao ASP.NET Core e interface Scalar via Scalar.AspNetCore.
 - SpecKit para especificação, planejamento, tarefas e análise da funcionalidade.
 
 ## Requisitos
@@ -50,9 +50,9 @@ $env:ConnectionStrings__Default = 'Data Source=C:\AppData\encurtaurl.db'
 
 Em produção, configure um caminho persistente e gravável fora dos arquivos publicados da aplicação. Não versione bancos locais com dados de execução.
 
-### Swagger e OpenAPI
+### Scalar e OpenAPI
 
-Com a API em execução no perfil `http`, abra a [interface Swagger](http://localhost:5080/swagger). O documento OpenAPI está em [http://localhost:5080/openapi/v1.json](http://localhost:5080/openapi/v1.json). Ambos só são disponibilizados em Development.
+Com a API em execução no perfil `http`, abra a [interface Scalar](http://localhost:5080/scalar). O documento OpenAPI está em [http://localhost:5080/openapi/v1.json](http://localhost:5080/openapi/v1.json). Ambos só são disponibilizados em Development.
 
 ### Encerrar
 
@@ -67,7 +67,7 @@ Pressione **Ctrl+C** no terminal em que `dotnet run` está sendo executado.
 | `GET`  | `/urls/{code}`     | Retorna os detalhes de um link                   | `200`, `404`         |
 | `GET`  | `/{code}`          | Redireciona para a URL original e conta o clique | `302`, `404`         |
 | `GET`  | `/openapi/v1.json` | Documento OpenAPI                                | Development          |
-| `GET`  | `/swagger`         | Interface interativa Swagger                     | Development          |
+| `GET`  | `/scalar`          | Interface interativa Scalar                      | Development          |
 
 ### Criar link curto
 

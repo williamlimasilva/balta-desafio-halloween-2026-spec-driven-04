@@ -3,7 +3,7 @@ using EncurtaUrl.Api.Endpoints;
 using EncurtaUrl.Api.Services;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using NSwag.AspNetCore;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,12 +43,7 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwaggerUi(settings =>
-    {
-        settings.DocumentTitle = "EncurtaUrl API";
-        settings.Path = "/swagger";
-        settings.SwaggerRoutes.Add(new SwaggerUiRoute("v1", "/openapi/v1.json"));
-    });
+    app.MapScalarApiReference(options => options.WithTitle("EncurtaUrl API"));
 }
 
 app.UseExceptionHandler();
